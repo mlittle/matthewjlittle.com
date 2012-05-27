@@ -1,0 +1,52 @@
+﻿CREATE OR REPLACE FUNCTION fn_PKCS7_Pad(pData IN RAW, pBlockSize IN PLS_INTEGER)
+  RETURN RAW
+IS
+  vPadSize  PLS_INTEGER;
+  vPadValue RAW(2);
+BEGIN
+  vPadSize  := pBlockSize - MOD(utl_raw.length(pData), pBlockSize);
+  vPadValue := hextoraw(ltrim(to_char(vPadSize, 'XX')));
+
+  RETURN utl_raw.concat(pData, utl_raw.copies(vPadValue, vPadSize));
+END;
+/
+
+CREATE OR REPLACE FUNCTION fn_PKCS7_Trim(pData IN RAW)
+  RETURN RAW
+IS
+  vPadSize  PLS_INTEGER;
+  vPadValue RAW(2);
+BEGIN
+  vPadValue := utl_raw.substr(pData, -1, 1);
+  vPadSize  := to_number(rawtohex(vPadValue), 'XX');
+
+  RETURN utl_raw.substr(pData, 1, utl_raw.length(pData) - vPadSize);
+END;
+/
+
+SET SERVEROUTPUT ON
+
+DECLARE
+  PROCEDURE sp_test_pkcs7 (pData IN RAW, pBlockSize IN PLS_INTEGER)
+  IS
+    vInData RAW(100);
+    vDataPadded RAW(100);
+    vDataTrimmed RAW(100);
+  BEGIN
+    vInData := hextoraw(pData);
+    vDataPadded := fn_pkcs7_pad(vInData, pBlockSize);
+    vDataTrimmed := fn_pkcs7_trim(vDataPadded);
+
+    dbms_output.put_line('------------------------------------');
+    dbms_output.put_line('IN:         ' || rawtohex(vInData));
+    dbms_output.put_line('BLOCK SIZE: ' || pBlockSize);
+    dbms_output.put_line('PADDED:     ' || rawtohex(vDataPadded));
+    dbms_output.put_line('TRIMMED:    ' ||rawtohex(vDataTrimmed));
+    dbms_output.put_line('------------------------------------');
+  END;
+BEGIN
+  sp_test_pkcs7('AABBCC', 8); --3 bytes of data
+  sp_test_pkcs7('AABBCCDDEEFF', 8); --6 byes of data
+  sp_test_pkcs7('AABBCCDDEEFFAABB', 8); --8 bytes of data
+END;
+/
