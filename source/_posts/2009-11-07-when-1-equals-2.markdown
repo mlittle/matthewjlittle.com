@@ -9,7 +9,7 @@ tags: [.NET, C#, Database, Oracle, SQL]
 This is not intended to be a discussion if [1 actually equals 2](http://mh1823.com/two_equals_one.htm).  But has to do with a line of sql from the other day.
 
 I had a request come in at work to disable a tab in one of our applications that showed historical data for customer accounts.  My initial thought was that we would have to make a change to the application and redeploy.  Pain in the arse!  When it dawned on me (which possibly was Adam slapping me up the side of the head) that since the application depended on the results of a query in Oracle, I could just force the query to return no rows, effectively showing no history in the application.
-<!--more-->
+
 So the quick fix was to disable the query by adding to the where clause "and 1=2". So regardless what the [skeptics say](http://www.math.toronto.edu/mathnet/plain/falseProofs/second1eq2.html), in Oracle land 1 will never equal 2.  So the query returns 0 rows no matter what parameters are passed in.
 
 Fantastic! One quick after hour change (b/c of packages supporting "State", discussion for another time), we had history disabled in the application.

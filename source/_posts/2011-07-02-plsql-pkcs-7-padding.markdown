@@ -3,7 +3,7 @@ layout: post
 title: "PL/SQL Implementation of PKCS #7 Padding"
 date: 2011-07-02 12:00
 comments: true
-categories: Programming
+categories: programming
 tags: [AES, Oracle, Padding, PKCS7, pl/sql, SQL]
 ---
 I've been working on an Oracle package for encrypting/decrypting data using AES256.  I need the package to be compatible with a separate C# implementation of AES256 I'm also working on.  In the .NET AESManaged Class, the default padding mode is PKCS #7, which the Oracle DBMS_CRYPTO package does not support.
