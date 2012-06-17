@@ -1,0 +1,8 @@
+---
+layout: nil
+---
+User-agent: *
+Disallow: /tags/
+Disallow: /tag/
+
+Sitemap: {{ site.url }}/sitemap.xml 
