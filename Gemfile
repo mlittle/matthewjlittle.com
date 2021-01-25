@@ -18,6 +18,8 @@ group :development do
   gem 'rb-fchange', '~> 0.0.6'
 
   gem 'jekyll-page-hooks'
+  
+  gem 'liquid', '=2.5.1'
 end
 
 gem 'rack', '~> 1.5.2'
